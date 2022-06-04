@@ -61,12 +61,14 @@ def run(filename, outfile):
             commandsstr += '__OP__\n'
             commandsstr += command['op'] + '\n'
             commandsstr += 'args '
-            if command['args'] != None:
+            if command.get('args') != None:
                 for arg in command['args']:
                     commandsstr += str(arg) + ' '
             commandsstr += '\n'
+            if command.get('func') != None:
+                commandsstr += 'func ' + str(command['func']) + '\n'
             for key in command:
-                if key != 'op' and key != 'args' and command[key] != None:
+                if key != 'op' and key != 'args' and key != 'func' and command[key] != None:
                     commandsstr += key + ' '
                     commandsstr += str(command[key]) + '\n'
     print(commandsstr)

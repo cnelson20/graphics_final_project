@@ -47,7 +47,7 @@ begin
     initMatrix(@PolygonNormalList);
     clearMatrix(PolygonLIst);
 
-    WriteLn('filename = ', filename);
+    //WriteLn('filename = ', filename);
 
     Assign(objFile, filename);
     Reset(objFile);
@@ -57,6 +57,7 @@ begin
             if Copy(comm,1,strchr(comm,' ', 1)-1) = '#!!c' then begin
                 //WriteLn('Special color comment!');
                 multiplyMatrix(Transform, PolygonList);
+                //WriteLn('PolygonList.length = ', PolygonList ^.length);
                 DrawPolygons(PolygonList);
                 clearMatrix(PolygonList);
                 j := getFloatsFromString(Copy(comm, 6), @FArgs);
@@ -100,7 +101,7 @@ begin
                         NormalArgs[i] := NormalArgs[i] + VertexList.length + 1;
                 end;
                 if j = 4 then begin 
-                    {WriteLn('f ', IArgs[1], ' ', IArgs[2], ' ', IArgs[3], ' ', IArgs[4]);
+                    { WriteLn('f ', IArgs[1], ' ', IArgs[2], ' ', IArgs[3], ' ', IArgs[4]); }
                     AddPolygon(PolygonList, 
                         VertexList.m[IArgs[1] - 1], 
                         VertexList.m[IArgs[2] - 1], 
@@ -108,9 +109,9 @@ begin
                     AddPolygon(PolygonList, 
                         VertexList.m[IArgs[1] - 1], 
                         VertexList.m[IArgs[3] - 1], 
-                        VertexList.m[IArgs[4] - 1]);}
+                        VertexList.m[IArgs[4] - 1]);
                 end else if j = 3 then begin
-                    {WriteLn('f ', IArgs[1], ' ', IArgs[2], ' ', IArgs[3]);
+                    {WriteLn('f ', IArgs[1], ' ', IArgs[2], ' ', IArgs[3]); }
                     AddPolygon(PolygonList, 
                         VertexList.m[IArgs[1] - 1], 
                         VertexList.m[IArgs[2] - 1], 
@@ -119,13 +120,14 @@ begin
                         AddPolygon(@NormalList, 
                             VertexList.m[NormalArgs[1] - 1], 
                             VertexList.m[NormalArgs[2] - 1], 
-                            VertexList.m[NormalArgs[3] - 1]); }
+                            VertexList.m[NormalArgs[3] - 1]);
                 end;
             end;
         end;
     end;
  
     multiplyMatrix(Transform, PolygonList);
+    //WriteLn('PolygonList.length = ', PolygonList ^.length);
     DrawPolygons(PolygonList);
 
     //WriteLn('VertexList ^.length: ', VertexList.length);

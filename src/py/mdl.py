@@ -38,7 +38,7 @@ tokens = (
     "DISPLAY", 
     "SCREEN", 
     "WEB", 
-    "CO"
+    "CO",
 )
 
 reserved = {
@@ -79,7 +79,7 @@ reserved = {
     "setknobs" : "SET_KNOBS",
     "focal" : "FOCAL",
     "display" : "DISPLAY",
-    "web" : "WEB"
+    "web" : "WEB",
 }
 
 t_ignore = " \t"
@@ -279,8 +279,9 @@ def p_command_basename(p):
     commands.append(cmd)
 
 def p_command_vary(p):
-    """command : VARY SYMBOL NUMBER NUMBER NUMBER NUMBER"""
-    cmd = {'op' : p[1], 'args' : p[3:], 'knob' : p[2]}
+    """command : VARY SYMBOL NUMBER NUMBER NUMBER NUMBER
+                 | VARY SYMBOL NUMBER NUMBER NUMBER NUMBER TEXT"""
+    cmd = {'op' : p[1], 'args' : p[3:7], 'knob' : p[2], 'func' : (p[7] if len(p) >= 8 else None)}
     symbols[p[2]] = ['knob', 0]
     commands.append(cmd)
 

@@ -61,10 +61,13 @@ var
 	VaryIsDef : Boolean = False;
 
 	BaseNameString : String = 'image';
-	NumOfFrames : LongInt = 0;
+	NumOfFrames : LongInt = 1;
 	CurrentFrameNum : LongInt;
 
 	KnobTableArray : Array of KnobsMap;
+
+
+	VaryFuncType : String = '';
 
 	KnobKeyList : Array of String;
 	CurrentKnobList : KnobsMap;
@@ -160,23 +163,45 @@ begin
 			if comm <> 'vary' then
 				continue;
 			ReadLn(ft, comm);
+			VaryFuncType := '';
 			ArgsDef := Copy(comm, Pos(' ', comm) + 1);
 			if Comm[Length(comm)] = ' ' then
 				SetLength(comm, Length(comm) - 1);
 			WriteLn('"', ArgsDef, '"');
 			getFloatsFromString(ArgsDef, @FxnArgs);
-			repeat 
-				ReadLn(ft, Arg_KnobName);
-			until (Copy(Arg_KnobName, 1, 4) = 'knob') or Eof(ft);
+			repeat begin
+				ReadLn(ft, comm);
+				Arg_KnobName := comm;
+				WriteLn(Copy(comm, 1, 4));
+				if (Copy(comm, 1, 4) = 'func') then begin
+					VaryFuncType := Copy(comm, Pos(' ', comm) + 1);
+				end;
+			end until (Copy(Arg_KnobName, 1, 4) = 'knob') or Eof(ft);
 			Arg_KnobName := Copy(Arg_KnobName, Pos(' ', Arg_KnobName) + 1);
 			if (Trunc(FxnArgs[1]) <> FxnArgs[1]) or (Trunc(FxnArgs[2]) <> FxnArgs[2]) then begin
 				WriteLn('Frame limits must be integers!');
 				exit();
-			end;		
-			for i := Trunc(FxnArgs[1]) to Trunc(FxnArgs[2]) do begin
-				CurrentKnobList := KnobTableArray[i];
-				CurrentKnobList[Arg_KnobName] := (i - FxnArgs[1]) / (FxnArgs[2] - FxnArgs[1]) * (FxnArgs[4] - FxnArgs[3]) + FxnArgs[3];
-			end;
+			end;	
+			WriteLn('VaryFuncType = ', VaryFuncType);
+			if VaryFuncType = '' then begin
+				WriteLn('Linear Knob');
+				for i := Trunc(FxnArgs[1]) to Trunc(FxnArgs[2]) do begin
+					CurrentKnobList := KnobTableArray[i];
+					CurrentKnobList[Arg_KnobName] := (i - FxnArgs[1]) / (FxnArgs[2] - FxnArgs[1]) * (FxnArgs[4] - FxnArgs[3]) + FxnArgs[3];
+				end;
+			end else if VaryFuncType = 'quad' then begin
+				WriteLn('Quadratic Knob');
+				for i := Trunc(FxnArgs[1]) to Trunc(FxnArgs[2]) do begin
+					CurrentKnobList := KnobTableArray[i];
+					CurrentKnobList[Arg_KnobName] := Power(i - FxnArgs[1], 2) / Power(FxnArgs[2] - FxnArgs[1], 2) * (FxnArgs[4] - FxnArgs[3]) + FxnArgs[3];
+				end;
+			end else if VaryFuncType = 'revquad' then begin
+				WriteLn('Reverse Quadratic Knob');
+				for i := Trunc(FxnArgs[1]) to Trunc(FxnArgs[2]) do begin
+					CurrentKnobList := KnobTableArray[i];
+					CurrentKnobList[Arg_KnobName] := Power(FxnArgs[2] - i, 2) / Power(FxnArgs[1] - FxnArgs[2], 2) * (FxnArgs[4] - FxnArgs[3]) + FxnArgs[3];
+				end;
+			end;	
 		end;
 	end;
 
