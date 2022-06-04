@@ -1,0 +1,17 @@
+*.o
+*.ppu
+
+__pycache__
+.vscode
+
+*.exe 
+
+*.pars
+
+*.ppm
+*.png
+
+src/pas/main
+main
+src/py/parser.out
+src/py/parsetab.py
