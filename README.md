@@ -1,10 +1,11 @@
 # Graphics Final Project
-### Name: YOUR NAME HERE
-### Partner name: IF APPLICABLE
-### Class Period:
+### Name: Cameron Nelson
+### Class Period: 5
 ---
 ## New Graphics Engine Features
 
+Obj mesh loader
+More vary arguments for exp/log. growth
 
 ---
 ## The Details
