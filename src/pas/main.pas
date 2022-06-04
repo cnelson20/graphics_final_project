@@ -1,6 +1,6 @@
 program Main;
 uses Sysutils, Math, Process, fgl,
-Lines, Graphicsmatrix, Curves, Shapes, Gmath, MatrixStack, StringHelper;
+ObjReader, Lines, GraphicsMatrix, Curves, Shapes, Gmath, MatrixStack, StringHelper;
 
 const 
 	GRAPH_HALF_STEP = 0.05;
@@ -286,6 +286,12 @@ begin
 				multiplyMatrix(Transform, EdgeList);
 				DrawEdges(EdgeList, curr);
 				clearMatrix(EdgeList);
+			{ Mesh }
+			end else if CommandName = 'mesh' then begin
+				if ArgsDef[Length(ArgsDef)] = ' ' then
+					SetLength(ArgsDef, Length(ArgsDef) - 1); 
+				readObj(Concat(ArgsDef, '.obj'), PolygonList, Transform);
+				clearMatrix(PolygonList);
 			{ Stack operations }
 			end else if CommandName = 'push' then begin
 				Push();
@@ -319,7 +325,7 @@ begin
 					rotateMatrixX(StrToFloat(Copy(ArgsDef,3)) * TempFloat, Transform)
 				else if (ArgsDef[1] = 'Y') or (ArgsDef[1] = 'y') then 
 					rotateMatrixY(StrToFloat(Copy(ArgsDef,3)) * TempFloat, Transform);
-			{ }
+			{ Save / View files }
 			end else if CommandName = 'display' then begin
 				SaveFile('TEMPFILE.ppm');
 				CmdArgs[0] := 'TEMPFILE.ppm';
@@ -352,7 +358,7 @@ begin
 			ArgsDef := IntToStr(CurrentFrameNum);
 			while Length(ArgsDef) < 3 do
 				ArgsDef := Concat('0', ArgsDef);
-		  	SaveFile(Concat(BaseNameString, '_', ArgsDef, '.ppm'));
+		  	SaveFile(Concat('anim/', BaseNameString, '_', ArgsDef, '.ppm'));
 			clearMatrix(EdgeList);
 			clearMatrix(PolygonList);
 			while cs.length > 0 do begin
