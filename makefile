@@ -4,8 +4,8 @@ else
 	PROGNAME = main
 endif
 
-test: main face.mdl src/py/main.py src/py/mdl.py src/py/script.py
-	./main face.mdl
+all: main
+	
 
 clean:
 	-rm *pyc *out parsetab.py
