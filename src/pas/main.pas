@@ -437,11 +437,11 @@ begin
 end;
 
 procedure main;
+{$ifndef WINDOWS}
 var 
-	{$ifndef WINDOWS}
 	b : boolean;
 	AnsiDummy : AnsiString;
-	{$endif}
+{$endif}
 begin
 	curr.red := $ff;
 	curr.green := $ff;
