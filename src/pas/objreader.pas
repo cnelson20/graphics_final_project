@@ -59,8 +59,7 @@ begin
                 //WriteLn('Special color comment!');
                 multiplyMatrix(Transform, PolygonList);
                 //WriteLn('PolygonList.length = ', PolygonList ^.length);
-                //DrawOBJPolygons(PolygonList, @PolygonNormalList);
-                DrawOBJPolygons(PolygonList);
+                DrawOBJPolygons(PolygonList, @PolygonNormalList);
                 clearMatrix(@PolygonNormalList);
                 clearMatrix(PolygonList);
                 j := getFloatsFromString(Copy(comm, 6), @FArgs);
@@ -136,8 +135,8 @@ begin
  
     multiplyMatrix(Transform, PolygonList);
     //WriteLn('PolygonList.length = ', PolygonList ^.length);
-    //DrawOBJPolygons(PolygonList, @PolygonNormalList);
-    DrawPolygons(PolygonList);
+    DrawOBJPolygons(PolygonList, @PolygonNormalList);
+    //DrawPolygons(PolygonList);
 
     WriteLn('NormalList.length = ', NormalList.length);
     WriteLn('PolygonNormalList.length = ', PolygonNormalList.length);

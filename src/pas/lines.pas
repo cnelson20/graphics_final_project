@@ -282,7 +282,7 @@ begin
 		begin
 			for k := 0 to 2 do begin
 				normaltemp := n ^.m[i + k];
-				WriteLn(Format('(%.3f,%.3f,%.3f)',[normaltemp[0], normaltemp[1], normaltemp[2]]));
+				//WriteLn(Format('(%.3f,%.3f,%.3f)',[normaltemp[0], normaltemp[1], normaltemp[2]]));
 				carr[k] := GetPolygonColor(p, i + k);
 			end;
 
