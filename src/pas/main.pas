@@ -224,7 +224,7 @@ begin
 		reset(ft);
 		while not Eof(ft) do begin 
 			readLn(ft, comm);
-			WriteLn('Comm: ', comm);
+			//WriteLn('Comm: ', comm);
 			if comm = '__RUN__' then
 				break;
 			if comm = '__CONST__' then begin
@@ -241,7 +241,7 @@ begin
 		while not Eof(ft) do 
 		begin 
 			readln(ft, comm);
-			WriteLn('Comm: ', comm);
+			//WriteLn('Comm: ', comm);
 			if comm = '__OP__' then 
 				continue;
 			CommandName := comm;
@@ -323,7 +323,8 @@ begin
 				if constants.indexOf(Arg_ConstantName) <> -1 then
 					FxnArgs := constants[Arg_ConstantName]
 				else begin
-					WriteLn('Constant "', Arg_ConstantName, '" not found! Defaulting to normal color');
+					if Arg_ConstantName <> ':' then
+						WriteLn('Constant "', Arg_ConstantName, '" not found! Defaulting to normal color');
 					for i := 0 to 8 do
 						FxnArgs[i + 1] := DefaultColor[i mod 3][i div 3];
 				end;

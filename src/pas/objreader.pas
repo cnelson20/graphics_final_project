@@ -47,7 +47,7 @@ begin
     initMatrix(@PolygonNormalList);
     clearMatrix(PolygonLIst);
 
-    WriteLn('filename = ', filename);
+    //WriteLn('filename = ', filename);
 
     Assign(objFile, filename);
     Reset(objFile);
@@ -138,9 +138,9 @@ begin
     DrawOBJPolygons(PolygonList, @PolygonNormalList);
     //DrawPolygons(PolygonList);
 
-    WriteLn('NormalList.length = ', NormalList.length);
-    WriteLn('PolygonNormalList.length = ', PolygonNormalList.length);
-    WriteLn('PolygonList.length = ', PolygonList ^.length);
+    //WriteLn('NormalList.length = ', NormalList.length);
+    //WriteLn('PolygonNormalList.length = ', PolygonNormalList.length);
+    //WriteLn('PolygonList.length = ', PolygonList ^.length);
     //WriteLn('Polygons: ', PolygonList.length div 3);
     Close(objFile);
 end;
