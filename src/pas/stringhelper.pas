@@ -74,12 +74,13 @@ begin
             temp2 := Copy(temp, 1, strchr(temp, '/', 1) - 1);
             //WriteLn(temp2);
 
-            if j = 1 then
-                arr1[i] := StrToInt(temp2)
-            else if j = 2 then
-                arr2[i] := StrToInt(temp2)
-            else
-                arr3[i] := StrToInt(temp2);
+            if temp2 <> '' then
+                if j = 1 then
+                    arr1[i] := StrToInt(temp2)
+                else if j = 2 then
+                    arr2[i] := StrToInt(temp2)
+                else
+                    arr3[i] := StrToInt(temp2);
             temp := Copy(temp, strchr(temp, '/', 1) + 1);
         end;
 

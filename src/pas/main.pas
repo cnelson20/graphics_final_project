@@ -1,5 +1,5 @@
 program Main;
-uses Sysutils, Math, Process, fgl,
+uses Sysutils, Math, Process, fgl, Dos,
 ObjReader, Lines, GraphicsMatrix, Curves, Shapes, Gmath, MatrixStack, StringHelper;
 
 const 
@@ -54,7 +54,7 @@ var
 	CommandName, ArgsDef : String;
 	Arg_ConstantName : String;
 	Arg_KnobName : String;
-
+	Arg_CSName : String;
 
 	FramesIsDef  : Boolean = False;
 	BaseNameIsDef  : Boolean = False;
@@ -224,6 +224,7 @@ begin
 		reset(ft);
 		while not Eof(ft) do begin 
 			readLn(ft, comm);
+			WriteLn('Comm: ', comm);
 			if comm = '__RUN__' then
 				break;
 			if comm = '__CONST__' then begin
@@ -240,6 +241,7 @@ begin
 		while not Eof(ft) do 
 		begin 
 			readln(ft, comm);
+			WriteLn('Comm: ', comm);
 			if comm = '__OP__' then 
 				continue;
 			CommandName := comm;
@@ -247,6 +249,7 @@ begin
 			ArgsDef := Copy(ArgsDef, Pos(' ', ArgsDef) + 1);
 			Arg_ConstantName := '';
 			Arg_KnobName := '';
+			Arg_CSName := '';
 			while not Eof(ft) do begin
 				ReadLn(ft, comm);
 				if comm = '__OP__' then
@@ -258,7 +261,11 @@ begin
 				end else if const_name = 'knob' then begin
 					Arg_KnobName := Copy(comm, i + 1);
 					//WriteLn(CommandName, ' ', Arg_KnobName);
+				end else if const_name = 'cs' then begin
+					Arg_CSName := Copy(comm, i + 1);
+					//WriteLn(CommandName, ' ', Arg_KnobName);
 				end;
+
 			end;
 			{ Print current command } 
 			{WriteLn('R:', CommandName, ' ', ArgsDef, ' ', Arg_ConstantName);}
@@ -313,9 +320,22 @@ begin
 				clearMatrix(EdgeList);
 			{ Mesh }
 			end else if CommandName = 'mesh' then begin
-				if ArgsDef[Length(ArgsDef)] = ' ' then
-					SetLength(ArgsDef, Length(ArgsDef) - 1); 
-				readObj(Concat(ArgsDef, '.obj'), PolygonList, Transform);
+				if constants.indexOf(Arg_ConstantName) <> -1 then
+					FxnArgs := constants[Arg_ConstantName]
+				else begin
+					WriteLn('Constant "', Arg_ConstantName, '" not found! Defaulting to normal color');
+					for i := 0 to 8 do
+						FxnArgs[i + 1] := DefaultColor[i mod 3][i div 3];
+				end;
+				for i := 0 to 2 do 
+					ObjAmbientRefl[i] := FxnArgs[1 + i * 3];
+				for i := 0 to 2 do 
+					ObjDiffuseRefl[i] := FxnArgs[2 + i * 3];
+				for i := 0 to 2 do 
+					ObjSpecularRefl[i] := FxnArgs[3 + i * 3];
+				if Arg_CSName[Length(Arg_CSName)] = ' ' then
+					SetLength(Arg_CSName, Length(Arg_CSName) - 1); 
+				readObj(Concat(Arg_CSName, '.obj'), PolygonList, Transform);
 				clearMatrix(PolygonList);
 			{ Stack operations }
 			end else if CommandName = 'push' then begin
@@ -428,8 +448,8 @@ begin
 	if (paramCount() >= 2) and (paramStr(2) = '--compiled') then
 		readCommandsFile(paramStr(1))
 	else begin
-		b := RunCommand(Concat('python3 src/py/main.py ', paramStr(1), ' out.pars'), AnsiDummy);
-		if not b then begin
+		Exec('python3', Concat('src/py/main.py ', paramStr(1), ' out.pars'));
+		if false then begin
 			WriteLn('python did an oopsie. its output: ');
 
 			WriteLn(AnsiDummy);

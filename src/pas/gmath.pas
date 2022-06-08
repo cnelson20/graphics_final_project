@@ -20,9 +20,9 @@ var
     ObjDiffuseRefl : coord = (0.5, 0.5, 0.5, 1);
     ObjSpecularRefl : coord = (0.5, 0.5, 0.5, 1);
 
-implementation
-var 
     normaltemp : coord;
+
+implementation
 
 { Github copilot did this }
 // Normalize a vector
@@ -102,9 +102,9 @@ var
 
     i : LongInt;
 begin
-    returnval.red := $20 + Random($e0);
-    returnval.green := $20 + Random($e0);
-    returnval.blue := $20 + Random($e0);
+    //returnval.red := $20 + Random($e0);
+    //returnval.green := $20 + Random($e0);
+    //returnval.blue := $20 + Random($e0);
 
     Normalize(@normaltemp);
     //Normalize(@PointLightVector);

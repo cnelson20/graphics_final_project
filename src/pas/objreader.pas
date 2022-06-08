@@ -47,18 +47,21 @@ begin
     initMatrix(@PolygonNormalList);
     clearMatrix(PolygonLIst);
 
-    //WriteLn('filename = ', filename);
+    WriteLn('filename = ', filename);
 
     Assign(objFile, filename);
     Reset(objFile);
     while not Eof(objFile) do begin
         ReadLn(objFile, comm);
+        //WriteLn(comm);
         if (Length(comm) >= 4) and (comm[1] = '#') then begin
             if Copy(comm,1,strchr(comm,' ', 1)-1) = '#!!c' then begin
                 //WriteLn('Special color comment!');
                 multiplyMatrix(Transform, PolygonList);
                 //WriteLn('PolygonList.length = ', PolygonList ^.length);
-                DrawPolygons(PolygonList);
+                //DrawOBJPolygons(PolygonList, @PolygonNormalList);
+                DrawOBJPolygons(PolygonList);
+                clearMatrix(@PolygonNormalList);
                 clearMatrix(PolygonList);
                 j := getFloatsFromString(Copy(comm, 6), @FArgs);
                 if j >= 3 then
@@ -116,11 +119,16 @@ begin
                         VertexList.m[IArgs[1] - 1], 
                         VertexList.m[IArgs[2] - 1], 
                         VertexList.m[IArgs[3] - 1]);
-                    if NormalArgs[j] <> ARBITARILY_SMALL_NUM then
-                        AddPolygon(@NormalList, 
+                    if NormalArgs[j] <> ARBITARILY_SMALL_NUM then begin
+                        //WriteLn(Format('f %d %d %d', [NormalArgs[1], NormalArgs[2], NormalArgs[3]]));
+                        //WriteLn(Format('n %.3f %.3f %.3f', [VertexList.m[NormalArgs[1] - 1][0], VertexList.m[NormalArgs[1] - 1][1], VertexList.m[NormalArgs[1] - 1][2]]));
+                        //WriteLn(Format('n %.3f %.3f %.3f', [VertexList.m[NormalArgs[2] - 1][0], VertexList.m[NormalArgs[2] - 1][1], VertexList.m[NormalArgs[2] - 1][2]]));
+                        //WriteLn(Format('n %.3f %.3f %.3f', [VertexList.m[NormalArgs[3] - 1][0], VertexList.m[NormalArgs[3] - 1][1], VertexList.m[NormalArgs[3] - 1][2]]));
+                        AddPolygon(@PolygonNormalList, 
                             VertexList.m[NormalArgs[1] - 1], 
                             VertexList.m[NormalArgs[2] - 1], 
                             VertexList.m[NormalArgs[3] - 1]);
+                    end;
                 end;
             end;
         end;
@@ -128,9 +136,12 @@ begin
  
     multiplyMatrix(Transform, PolygonList);
     //WriteLn('PolygonList.length = ', PolygonList ^.length);
+    //DrawOBJPolygons(PolygonList, @PolygonNormalList);
     DrawPolygons(PolygonList);
 
-    //WriteLn('VertexList ^.length: ', VertexList.length);
+    WriteLn('NormalList.length = ', NormalList.length);
+    WriteLn('PolygonNormalList.length = ', PolygonNormalList.length);
+    WriteLn('PolygonList.length = ', PolygonList ^.length);
     //WriteLn('Polygons: ', PolygonList.length div 3);
     Close(objFile);
 end;
