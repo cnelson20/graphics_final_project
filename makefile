@@ -5,7 +5,7 @@ else
 endif
 
 all: main
-	
+	./main obj.mdl
 
 clean:
 	-rm *pyc *out parsetab.py

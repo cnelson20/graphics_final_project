@@ -418,7 +418,11 @@ begin
 	Close(ft);
 
 	if FramesIsDef then begin
+		{$ifdef WINDOWS}
+		Exec('convert', Concat('anim/', basename, '* ', basename, '.gif'));
+		{$else}
 		bool := RunCommand(Concat('python3 src/py/animate.py ', BaseNameString), ansi);
+		{$endif}
 	end;
 
 	for i := 0 to NumOfFrames - 1 do
@@ -434,8 +438,10 @@ end;
 
 procedure main;
 var 
+	{$ifndef WINDOWS}
 	b : boolean;
 	AnsiDummy : AnsiString;
+	{$endif}
 begin
 	curr.red := $ff;
 	curr.green := $ff;
@@ -443,17 +449,23 @@ begin
 
 	if paramCount() = 0 then 
 	begin 
-		writeln('Need file as input!');
 		exit;
 	end;
 	if (paramCount() >= 2) and (paramStr(2) = '--compiled') then
 		readCommandsFile(paramStr(1))
 	else begin
+		{$ifndef WINDOWS}
+		RunCommand(Concat('python3 src/py/main.py ', paramStr(1), ' out.pars'), AnsiDummy);
+		{$else}
 		Exec('python3', Concat('src/py/main.py ', paramStr(1), ' out.pars'));
+		{$endif}
 		if false then begin
+			{$ifndef WINDOWS}
 			WriteLn('python did an oopsie. its output: ');
-
 			WriteLn(AnsiDummy);
+			{$else}
+			WriteLn('python did an oopsie.');
+			{$endif}
 
 			WriteLn('You can try again, by running python3 src/main.py ', paramStr(1), ' out.pars, and then');
 			WriteLn('running ./pas/main out.pars');
