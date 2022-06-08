@@ -423,6 +423,7 @@ begin
 	Close(ft);
 
 	if FramesIsDef then begin
+		WriteLn('Converting to GIF!');
 		bool := RunCommand(Concat('python3 src/py/animate.py ', BaseNameString), ansi);
 	end;
 
