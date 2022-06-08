@@ -419,7 +419,7 @@ begin
 
 	if FramesIsDef then begin
 		{$ifdef WINDOWS}
-		Exec('convert', Concat('anim/', basename, '* ', basename, '.gif'));
+		Exec('convert', Concat('anim/', BaseNameString, '* ', BaseNameString, '.gif'));
 		{$else}
 		bool := RunCommand(Concat('python3 src/py/animate.py ', BaseNameString), ansi);
 		{$endif}
