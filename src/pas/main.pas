@@ -182,24 +182,29 @@ begin
 				WriteLn('Frame limits must be integers!');
 				exit();
 			end;	
-			WriteLn('VaryFuncType = ', VaryFuncType);
-			if VaryFuncType = '' then begin
-				WriteLn('Linear Knob');
-				for i := Trunc(FxnArgs[1]) to Trunc(FxnArgs[2]) do begin
-					CurrentKnobList := KnobTableArray[i];
-					CurrentKnobList[Arg_KnobName] := (i - FxnArgs[1]) / (FxnArgs[2] - FxnArgs[1]) * (FxnArgs[4] - FxnArgs[3]) + FxnArgs[3];
-				end;
-			end else if VaryFuncType = 'quad' then begin
-				WriteLn('Quadratic Knob');
-				for i := Trunc(FxnArgs[1]) to Trunc(FxnArgs[2]) do begin
-					CurrentKnobList := KnobTableArray[i];
-					CurrentKnobList[Arg_KnobName] := Power(i - FxnArgs[1], 2) / Power(FxnArgs[2] - FxnArgs[1], 2) * (FxnArgs[4] - FxnArgs[3]) + FxnArgs[3];
-				end;
-			end else if VaryFuncType = 'revquad' then begin
-				WriteLn('Reverse Quadratic Knob');
-				for i := Trunc(FxnArgs[1]) to Trunc(FxnArgs[2]) do begin
-					CurrentKnobList := KnobTableArray[i];
-					CurrentKnobList[Arg_KnobName] := Power(FxnArgs[2] - i, 2) / Power(FxnArgs[1] - FxnArgs[2], 2) * (FxnArgs[4] - FxnArgs[3]) + FxnArgs[3];
+			if FxnArgs[1] = FxnArgs[2] then begin
+				CurrentKnobList := KnobTableArray[Trunc(FxnArgs[1])];
+				CurrentKnobList[Arg_KnobName] := FxnArgs[3];
+			end else begin
+				WriteLn('VaryFuncType = ', VaryFuncType);
+				if VaryFuncType = '' then begin
+					WriteLn('Linear Knob');
+					for i := Trunc(FxnArgs[1]) to Trunc(FxnArgs[2]) do begin
+						CurrentKnobList := KnobTableArray[i];
+						CurrentKnobList[Arg_KnobName] := (i - FxnArgs[1]) / (FxnArgs[2] - FxnArgs[1]) * (FxnArgs[4] - FxnArgs[3]) + FxnArgs[3];
+					end;
+				end else if VaryFuncType = 'quad' then begin
+					WriteLn('Quadratic Knob');
+					for i := Trunc(FxnArgs[1]) to Trunc(FxnArgs[2]) do begin
+						CurrentKnobList := KnobTableArray[i];
+						CurrentKnobList[Arg_KnobName] := Power(i - FxnArgs[1], 2) / Power(FxnArgs[2] - FxnArgs[1], 2) * (FxnArgs[4] - FxnArgs[3]) + FxnArgs[3];
+					end;
+				end else if VaryFuncType = 'revquad' then begin
+					WriteLn('Reverse Quadratic Knob');
+					for i := Trunc(FxnArgs[1]) to Trunc(FxnArgs[2]) do begin
+						CurrentKnobList := KnobTableArray[i];
+						CurrentKnobList[Arg_KnobName] := Power(FxnArgs[2] - i, 2) / Power(FxnArgs[1] - FxnArgs[2], 2) * (FxnArgs[4] - FxnArgs[3]) + FxnArgs[3];
+					end;
 				end;
 			end;	
 		end;
@@ -418,12 +423,7 @@ begin
 	Close(ft);
 
 	if FramesIsDef then begin
-		{$ifdef WINDOWS}
-		WriteLn('convert ', Concat('anim/', BaseNameString, '* ', BaseNameString, '.gif'));
-		Exec('convert', Concat('anim/', BaseNameString, '* ', BaseNameString, '.gif'));
-		{$else}
 		bool := RunCommand(Concat('python3 src/py/animate.py ', BaseNameString), ansi);
-		{$endif}
 	end;
 
 	for i := 0 to NumOfFrames - 1 do
